@@ -46,13 +46,20 @@ fileLines = splitOn "\n"
 arrowSplitted :: String -> [String]
 arrowSplitted = splitOn " -> "
 
-extractOriginCity :: [String] -> String
-extractOriginCity = head
+originCities :: [String] -> [String]
+originCities = map $ head . arrowSplitted
 
-extractDestinationCity :: [String] -> String
-extractDestinationCity = last
+destinationCities :: [String] -> [String]
+destinationCities = map $ last . splitOn ":" . head . arrowSplitted
+
+extractDistance :: [String] -> String
+extractDistance = head . splitOn " " . last . splitOn ": " . last
+
+distances :: [String] -> [String]
+distances = map $ extractDistance . arrowSplitted
+
 
 main :: IO ()
-main = putStrLn $ intercalate "\n" $ map (extractOriginCity . arrowSplitted) $ fileLines cityPaths
+main = putStrLn $ intercalate "\n" $ originCities $ fileLines cityPaths
 
 
